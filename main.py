@@ -1,6 +1,6 @@
 import serial as s
 import time
-import json
+import pickle
 import socket
 
 device = ''  # Variável na qual será armazemada o nome do dispositivo
@@ -54,21 +54,21 @@ while True:
         }
 
         # Escrita no arquivo JSON
-        file = json.dumps(dados, indent=4)
+        file = pickle.dumps(dados)
         print('Arquivo criado.')
 
         # Conectando com o servidor
-        print('Conectando com o servidor...')
-        sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        sock.connect((HOST, PORT))
-        conf = sock.recv(1)  # Recebe True se tiver se conectado ao server
-        if conf:
-          print('Conectado.')
-          sock.sendall(True)  # Envia mensagem de que foi conectado para o server
-          sock.sendfile(file)  # Envia o arquivo 
-          sock.close()  # Fecha a conexão com o server
-        else:
-          print('Não foi possível estabelecer a conexão.')
+        with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+            s.connect((HOST, PORT))
+            s.sendall(b'True')
+            data = s.recv(1024)
+            data.decode('utf-8')
+            data = bool(data)
+            if data:
+                print('Conectado.')
+                s.sendall(file)
+            else:
+                print('Não foi possível estabelecer a conexão com o servidor.')
 
         # Desconecta a conexão serial
         print('\nDesconectando...')
@@ -76,6 +76,6 @@ while True:
         print('Desconectado.\n\n')
 
         # Tempo de espera até a próxima leitura
-        time.sleep(2)
+        time.sleep(30)
     else:
         print('Não foi possível estabelecer a conexão.')
