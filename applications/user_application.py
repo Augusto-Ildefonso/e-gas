@@ -59,11 +59,7 @@ while True:
         # Try to serialize the JSON
         print('\n\nCriando o arquivo JSON...')
         try:
-            json_file = json.dumps(dados, indent=4)
-            with open('dados.json', 'w') as o:
-                o.write(json_file)
-                o.close()
-            print('Arquivo criado.')
+            json_file = json.dumps(dados, indent=4)   
         except:
             print('Não foi possível criar o arquivo JSON.')
 
