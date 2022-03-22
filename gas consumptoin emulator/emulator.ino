@@ -1,16 +1,16 @@
 #include <ArduinoUniqueID.h>
 
 int sensorValue = 0;
-int num;
+int num, i=0;
 
 void setup() {
   // initialize serial communications at 9600 bps:
   Serial.begin(9600);
-  UniqueID8dump(Serial);
 }
 
 void loop() {
-  Serial.print("/");
-  Serial.print(55555);
-  delay(2000);
+  UniqueID8dump(Serial);
+  Serial.print(10.50);
+  delay(5000);
+
 }
