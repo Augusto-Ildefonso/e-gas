@@ -2,6 +2,7 @@ import socket
 import pickle
 import json
 import time
+import os
 
 HOST = 'localhost'
 PORT = 40000
@@ -11,21 +12,28 @@ while True:
     sock.bind((HOST, PORT))
     sock.listen(1)
     print('Socket criado!')
-    print('Esperando conexão...')
+    print('\nEsperando conexão...')
     conn, addr = sock.accept()
     print('Nova conexão de', addr, '!')
+    print('\n\nRecebendo os dados...')
     conf = conn.recv(1024)
     conn.sendall(conf)
     conf.decode('utf-8')
     conf = bool(conf)
-    print(conf)
+    print('Dados recebidos.')
     if conf:
         # Abrir arquivo
-        data = conn.recv(1024)
-        json_file = pickle.loads(data)
-        json = json.dumps(json_file, indent=4)
-        file = open('data.json', 'w')
-        file.write(json)
-        file.close()
+        print('\n\nCriando arquivo JSON...')
+        try:
+            data = conn.recv(1024)
+            file = open('data.json', 'w')
+            data = data.decode('utf-8')
+            file.write(data)
+            file.close()
+            print('Arquivo criado.')
+        except:
+            print('Não foi possível criar o arquivo.')
         sock.close()
-    time.sleep(30)
+        print('Conexão encerrada.\n\n')
+    time.sleep(10)
+    os.system('cls')
