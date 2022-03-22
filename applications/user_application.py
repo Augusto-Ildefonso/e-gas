@@ -8,6 +8,7 @@ data_received = ''  # Variável na qual será armazanado os dados recebidos
 num_serie = 0  # Variável na qual será armazenada o número de série
 pressao = -1  # Variável na qual será armazenada a pressão
 dados = {}  # Variável a partir da qual será gerado o arquivo JSON
+data = bytes()
 HOST = "localhost"  # The server's hostname or IP address
 PORT = 40000
 
