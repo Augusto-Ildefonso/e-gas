@@ -59,6 +59,9 @@ while True:
             try:
                 file = pickle.dumps(dados)
                 print('Serialização completa.')
+                """
+                Tentar enviar como json, só que tem que converter o json depois para bytes
+                """
                   
             except:
                   print('Não foi possível serializar o dicionário.')
