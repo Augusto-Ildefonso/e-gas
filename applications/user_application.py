@@ -1,7 +1,7 @@
 import serial as s
 import time
 import json
-import socket
+import requests
 import os
 
 device = ''  # Device's name
@@ -11,8 +11,7 @@ pressure = -1  # Gas cylinder pressure
 dados = {}  # Dictionary in which the received data will be stored
 data = bytes()  # Received data from the server
 json_file = ''
-HOST = "localhost"  # The server's hostname or IP address
-PORT = 40000  # The server's port
+url = ''
 
 
 while True:
@@ -65,30 +64,10 @@ while True:
 
         # Connects with the server
         print('\nConectando com o servidor...')
-        sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        sock.connect((HOST, PORT))
-        sock.sendall(b'True')  # Send a message to check the connection with the server
-        data = sock.recv(1024)  # Receive the server response
-        data.decode('utf-8')  # Decode the server response
-        data = bool(data)  # Convert the server responde to boolean
-        if data:
-            print('Conectado.')
-            # Sending the json object
-            print('\nTentando enviar o arquivo JSON...')
-            try:
-                sock.sendall(bytes(json_file, encoding='utf-8'))
-                print('Arquivo JSON enviado.')
-            except:
-                print('Não foi possível enviar o arquivo JSON.')
-        else:
-            print('Não foi possível estabelecer a conexão com o servidor.')
-        sock.close()
-
-        # Disconnect with the serial port
-        print('\nDesconectando...')
-        ser1.close()
-        print('Desconectado.\n\n')
-
+        try:
+            r = requests.post(url, data=json_file)
+        except requests.ConnectionError:
+            printd('Não foi possível conectar com o servidor.')
         # Waiting time until the next reading
         time.sleep(10)
 
